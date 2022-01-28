@@ -11,9 +11,9 @@ class Player(pygame.sprite.Sprite):
         self.velocity_y = 0
         img = pygame.image.load("assets/player.png")
         self.image = pygame.transform.scale(img, (int(img.get_width() * scale), int(img.get_height() * scale)))
-        self.pos = self.image.get_rect()
-        self.pos.x = x
-        self.pos.y = y
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
         self.flip = True
         self.direction = 1
         self.jump = False
@@ -21,12 +21,12 @@ class Player(pygame.sprite.Sprite):
         self.projectile = pygame.sprite.Group()
 
     def draw(self, screen):
-        screen.blit(pygame.transform.flip(self.image, self.flip, False), self.pos)
+        screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
 
     def move(self, moving_left, moving_right, GRAVITY):
         dx = 0
         dy = 0
-        if (pygame.mouse.get_pos()[0] - self.pos.centerx) < 0:
+        if (pygame.mouse.get_pos()[0] - self.rect.centerx) < 0:
             self.flip = False
             self.direction = -1
         else:
@@ -46,16 +46,15 @@ class Player(pygame.sprite.Sprite):
             self.in_air = True
 
         self.velocity_y += GRAVITY
-        if self.velocity_y > 10:
-            self.velocity_y
+
         dy += self.velocity_y
 
-        if self.pos.bottom + dy > 600:
-            dy = 600 - self.pos.bottom
+        if self.rect.bottom + dy > 600:
+            dy = 600 - self.rect.bottom
             self.in_air = False
 
-        self.pos.x += dx
-        self.pos.y += dy
+        self.rect.x += dx
+        self.rect.y += dy
 
     def launch_grenade(self):
         self.projectile.add(Grenade())
