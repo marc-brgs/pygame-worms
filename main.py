@@ -20,7 +20,7 @@ RED = (255, 0, 0)
 # Init
 game = Game()
 GRAVITY = game.GRAVITY
-player = game.player
+worm = game.player1.worm1
 grenade_group = game.grenade_group
 explosion_group = game.explosion_group
 
@@ -38,10 +38,9 @@ while running:
     # Affichage background
     screen.blit(background, (0,0))
 
-    # Affichage sol et player
-    pygame.draw.line(screen, RED, (0, 600), (SCREEN_WIDTH, 600))
-    player.draw(screen)
-    player.move(moving_left, moving_right, GRAVITY)
+    # Affichage sol et worm
+    pygame.draw.line(screen, RED, (0, 593), (SCREEN_WIDTH, 593))
+    game.player1.showWorm(screen, moving_left, moving_right, GRAVITY)
 
     # Affichage autres entités
     grenade_group.update()
@@ -51,21 +50,21 @@ while running:
 
     # Affichage vie du joueur
     font = pygame.font.SysFont(None, 24)
-    img = font.render(str(player.health), True, RED)
-    screen.blit(img, (player.rect.centerx-(img.get_width()/2), player.rect.top-10))
+    img = font.render(str(worm.health), True, RED)
+    screen.blit(img, (worm.rect.centerx-(img.get_width()/2), worm.rect.top-10))
 
     # Aide visée
-    pygame.draw.line(screen, RED, (player.rect.centerx, player.rect.centery), (pygame.mouse.get_pos()))
+    pygame.draw.line(screen, RED, (worm.rect.centerx, worm.rect.centery), (pygame.mouse.get_pos()))
 
     if shoot_grenade:
-        force_x = pygame.mouse.get_pos()[0] - player.rect.centerx
-        force_y = pygame.mouse.get_pos()[1] - player.rect.centery
+        force_x = pygame.mouse.get_pos()[0] - worm.rect.centerx
+        force_y = pygame.mouse.get_pos()[1] - worm.rect.centery
         force = ((force_x-force_x/2)/40, (force_y-force_y/2)/40)
         #print("Throw force :", force)
-        grenade = Grenade(player.rect.centerx, player.rect.centery, force, game)
+        grenade = Grenade(worm.rect.centerx, worm.rect.centery, force, game)
         shoot_grenade = False
 
-    #print(player.vel_y)
+    #print(worm.vel_y)
     #print(clock.get_fps())
     pygame.display.update() # Update affichage
 
@@ -85,12 +84,12 @@ while running:
 
         # Input claviers
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_RIGHT and player.rect.x + player.rect.width < SCREEN_WIDTH:
+            if event.key == pygame.K_RIGHT and worm.rect.x + worm.rect.width < SCREEN_WIDTH:
                 moving_right = True
-            if event.key == pygame.K_LEFT and player.rect.x > 0:
+            if event.key == pygame.K_LEFT and worm.rect.x > 0:
                 moving_left = True
-            if event.key == pygame.K_UP and not player.in_air:
-                player.jump = True
+            if event.key == pygame.K_UP and not worm.in_air:
+                worm.jump = True
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_RIGHT:
                 moving_right = False
