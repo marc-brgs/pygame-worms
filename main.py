@@ -1,3 +1,4 @@
+import math
 from turtledemo import clock
 
 import pygame
@@ -20,17 +21,22 @@ RED = (255, 0, 0)
 # Init
 game = Game()
 GRAVITY = game.GRAVITY
-worm = game.player1.worm1
+worm1_1 = game.player1.worm1
+worm1_2 = game.player2.worm1
 grenade_group = game.grenade_group
 explosion_group = game.explosion_group
 
 # Actions
-moving_right = False
-moving_left = False
+moving_right_1 = False
+moving_left_1 = False
+moving_right_2 = False
+moving_left_2 = False
 shoot_grenade = False
 
 # Script action
 running = True
+actualWormPlayer = worm1_1
+turn = 1
 
 while running:
     dt = clock.tick(FPS)
@@ -40,7 +46,8 @@ while running:
 
     # Affichage sol et worm
     pygame.draw.line(screen, RED, (0, 593), (SCREEN_WIDTH, 593))
-    game.player1.showWorm(screen, moving_left, moving_right, GRAVITY)
+    game.player1.showWorm(screen, moving_left_1, moving_right_1, GRAVITY)
+    game.player2.showWorm(screen, moving_left_2, moving_right_2, GRAVITY)
 
     # Affichage autres entités
     grenade_group.update()
@@ -49,19 +56,36 @@ while running:
     explosion_group.draw(screen)
 
     # Affichage vie du joueur
-    font = pygame.font.SysFont(None, 24)
-    img = font.render(str(worm.health), True, RED)
-    screen.blit(img, (worm.rect.centerx-(img.get_width()/2), worm.rect.top-10))
+    game.showHealthBar(screen, worm1_1, RED)
+    game.showHealthBar(screen, worm1_2, RED)
 
     # Aide visée
-    pygame.draw.line(screen, RED, (worm.rect.centerx, worm.rect.centery), (pygame.mouse.get_pos()))
+    if(actualWormPlayer == worm1_1):
+        game.aiming(screen, RED, worm1_1)
+    elif(actualWormPlayer == worm1_2):
+        game.aiming(screen, RED, worm1_2)
 
     if shoot_grenade:
-        force_x = pygame.mouse.get_pos()[0] - worm.rect.centerx
-        force_y = pygame.mouse.get_pos()[1] - worm.rect.centery
-        force = ((force_x-force_x/2)/40, (force_y-force_y/2)/40)
+        A = (actualWormPlayer.rect.centerx, actualWormPlayer.rect.centery)
+        B = (pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1])
+        #C = (pygame.mouse.get_pos()[0], actualWormPlayer.rect.centery)
+
+        vect_AB = (B[0] - A[0], B[1] - A[1])
+        #vect_AC = (C[0] - A[0], C[1] - A[1])
+        #vect_CB = (B[0] - C[0], B[1] - C[1])
+
+        #norme_AB = math.sqrt(vect_AB[0]**2 + vect_AB[1]**2)
+        #norme_AC = math.sqrt(vect_AC[0]**2 + vect_AC[1]**2)
+
+        #prod_scalaire = vect_AB[0]*vect_AC[0] + vect_AB[1]*vect_AC[1]
+
+        #alpha = math.acos(prod_scalaire/(norme_AB*norme_AC))
+
+
+        v = (vect_AB[0], vect_AB[1])
+
         #print("Throw force :", force)
-        grenade = Grenade(worm.rect.centerx, worm.rect.centery, force, game)
+        grenade = Grenade(actualWormPlayer.rect.centerx, actualWormPlayer.rect.centery, v, game)
         shoot_grenade = False
 
     #print(worm.vel_y)
@@ -84,14 +108,26 @@ while running:
 
         # Input claviers
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_RIGHT and worm.rect.x + worm.rect.width < SCREEN_WIDTH:
-                moving_right = True
-            if event.key == pygame.K_LEFT and worm.rect.x > 0:
-                moving_left = True
-            if event.key == pygame.K_UP and not worm.in_air:
-                worm.jump = True
+            if turn == 1:
+                if event.key == pygame.K_RIGHT and actualWormPlayer.rect.x + actualWormPlayer.rect.width < SCREEN_WIDTH:
+                    moving_right_1 = True
+                if event.key == pygame.K_LEFT and actualWormPlayer.rect.x > 0:
+                    moving_left_1 = True
+            if turn == 2:
+                if event.key == pygame.K_RIGHT and actualWormPlayer.rect.x + actualWormPlayer.rect.width < SCREEN_WIDTH:
+                    moving_right_2 = True
+                if event.key == pygame.K_LEFT and actualWormPlayer.rect.x > 0:
+                    moving_left_2 = True
+            if event.key == pygame.K_UP and not actualWormPlayer.in_air:
+                actualWormPlayer.jump = True
         elif event.type == pygame.KEYUP:
-            if event.key == pygame.K_RIGHT:
-                moving_right = False
-            if event.key == pygame.K_LEFT:
-                moving_left = False
+            if turn == 1:
+                if event.key == pygame.K_RIGHT:
+                    moving_right_1 = False
+                if event.key == pygame.K_LEFT:
+                    moving_left_1 = False
+            elif turn == 2:
+                if event.key == pygame.K_RIGHT:
+                    moving_right_2 = False
+                if event.key == pygame.K_LEFT:
+                    moving_left_2 = False

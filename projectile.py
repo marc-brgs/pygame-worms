@@ -24,7 +24,7 @@ class Grenade(pygame.sprite.Sprite):
         #print("Grenade rotation speed :", self.rotation_speed)
 
     def update(self):
-        self.vel_y += self.GRAVITY
+        self.vel_y += 1 #self.GRAVITY
         dx = self.vel_x
         dy = self.vel_y
 
