@@ -81,10 +81,16 @@ while running:
 
         #alpha = math.acos(prod_scalaire/(norme_AB*norme_AC))
 
+        factor = 5
+        signe_x = 1
+        signe_y = 1
+        if vect_AB[0] < 0:
+            signe_x = -1
+        if vect_AB[1] < 0:
+            signe_y = -1
+        v = (factor * signe_x * math.sqrt(abs(vect_AB[0])), factor * signe_y * math.sqrt(abs(vect_AB[1])))
 
-        v = (vect_AB[0], vect_AB[1])
-
-        #print("Throw force :", force)
+        print("Throw force :", v)
         grenade = Grenade(actualWormPlayer.rect.centerx, actualWormPlayer.rect.centery, v, game)
         shoot_grenade = False
 

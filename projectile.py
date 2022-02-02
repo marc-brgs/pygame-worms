@@ -13,6 +13,9 @@ class Grenade(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.img, (int(self.img.get_width() * 0.8), int(self.img.get_height() * 0.8)))
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
+        self.x_0 = x
+        self.y_0 = y
+
 
         self.vel_x = force[0]
         self.vel_y = force[1]
@@ -21,12 +24,19 @@ class Grenade(pygame.sprite.Sprite):
         self.rotation = 0
         self.rotation_speed = randrange(2, 5)
         self.timer = 450
+        self.t = 0
         #print("Grenade rotation speed :", self.rotation_speed)
 
     def update(self):
-        self.vel_y += 1 #self.GRAVITY
+        self.rect.x = self.vel_x * self.t + self.x_0
+        self.rect.y = -0.5 * -self.GRAVITY * self.t**2 + self.vel_y * self.t + self.y_0
+
+        # Ancien code trajectoire
+        """
+        #self.vel_y += 0.05 #self.GRAVITY
         dx = self.vel_x
         dy = self.vel_y
+
 
         # Touche le sol
         if self.rect.bottom + dy > 600:
@@ -36,8 +46,9 @@ class Grenade(pygame.sprite.Sprite):
             if self.rotation_speed > 0:
                 self.rotation_speed -= .5
 
-        self.rect.x += dx
+        self.rect.x = dx
         self.rect.y += dy
+        """
 
         self.image = pygame.transform.rotate(self.img, self.rotation)
         self.rotation += self.rotation_speed
@@ -46,6 +57,8 @@ class Grenade(pygame.sprite.Sprite):
         if self.timer <= 0:
             self.kill()
             explosion = Explosion(self.rect.x, self.rect.y, 2, self.game)
+
+        self.t += .05
 
 class Explosion(pygame.sprite.Sprite):
     def __init__(self, x, y, scale, game):
