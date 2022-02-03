@@ -51,8 +51,10 @@ class Grenade(pygame.sprite.Sprite):
         if self.timer <= 0:
             self.kill()
             explosion = Explosion(self.rect.x, self.rect.y, 2, self.game)
-            explosion.degats(self.game.player1.worm1)
-            explosion.degats(self.game.player2.worm1)
+            explosion.degats(self.game.player1.worm1, 0.1, 4)
+            explosion.degats(self.game.player2.worm1, 0.1, 4)
+            explosion.degats(self.game.box, 0.1, 4)
+
 
         self.t += .05
 
@@ -88,9 +90,9 @@ class Explosion(pygame.sprite.Sprite):
             else:
                 self.image = self.images[self.img_index]
 
-    def degats(self, worm):
+    def degats(self, element, h_courbe_ecart, l_courbe_ecart):
         g_center = (self.rect.center[0], self.rect.center[1])
-        w_center = (worm.rect.centerx, worm.rect.centery)
+        w_center = (element.rect.centerx, element.rect.centery)
 
         #print(self.rect.center[0], self.rect.center[1])
         #print(worm.rect.centerx, worm.rect.centery)
@@ -100,11 +102,13 @@ class Explosion(pygame.sprite.Sprite):
         #print(d)
 
         esperance = 0
-        h_courbe_ecart = 0.1
-        l_courbe_ecart = 4
 
         gauss = 1/(h_courbe_ecart*math.sqrt(2*math.pi)) * math.exp(-((d-esperance)**2)/(2*l_courbe_ecart)**2) *10
 
         #print(round(gauss))
 
-        worm.health -= round(gauss)
+        #print(element.health)
+
+        element.health -= round(gauss)
+        if element.health <= 0:
+            element.health = 0

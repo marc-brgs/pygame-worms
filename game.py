@@ -1,5 +1,6 @@
 import pygame
 from player import Player
+from box import Box
 
 import math
 
@@ -10,6 +11,7 @@ class Game:
         self.player2 = Player(780, 350, (0, 0, 255))
         self.grenade_group = pygame.sprite.Group()
         self.explosion_group = pygame.sprite.Group()
+        self.box = Box(1050, 580)
 
     def aiming(self, screen, RED, worm):
         WHITE = (255, 255, 255)
