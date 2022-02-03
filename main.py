@@ -55,10 +55,6 @@ while running:
     explosion_group.update()
     explosion_group.draw(screen)
 
-    # Affichage vie du joueur
-    game.showHealthBar(screen, worm1_1, RED)
-    game.showHealthBar(screen, worm1_2, RED)
-
     # Aide visée
     if(actualWormPlayer == worm1_1):
         game.aiming(screen, RED, worm1_1)
@@ -67,10 +63,12 @@ while running:
 
     if shoot_grenade:
         A = (actualWormPlayer.rect.centerx, actualWormPlayer.rect.centery)
-        B = (pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1])
+        B = (pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1] -30)
         #C = (pygame.mouse.get_pos()[0], actualWormPlayer.rect.centery)
 
         vect_AB = (B[0] - A[0], B[1] - A[1])
+
+        '''
         #vect_AC = (C[0] - A[0], C[1] - A[1])
         #vect_CB = (B[0] - C[0], B[1] - C[1])
 
@@ -80,21 +78,26 @@ while running:
         #prod_scalaire = vect_AB[0]*vect_AC[0] + vect_AB[1]*vect_AC[1]
 
         #alpha = math.acos(prod_scalaire/(norme_AB*norme_AC))
+        '''
 
         factor = 5
-        signe_x = 1
-        signe_y = 1
+        direction_x = 1
+        direction_y = 1
         if vect_AB[0] < 0:
-            signe_x = -1
+            direction_x = -1
         if vect_AB[1] < 0:
-            signe_y = -1
-        v = (factor * signe_x * math.sqrt(abs(vect_AB[0])), factor * signe_y * math.sqrt(abs(vect_AB[1])))
+            direction_y = -1
+
+        if abs(vect_AB[0]/300) > 1:
+            vect_AB = (direction_x * 300, vect_AB[1])
+        if abs(vect_AB[1]/300) > 1:
+            vect_AB = (vect_AB[0], direction_y * 300)
+        v = (100 * direction_x * math.sin((abs(vect_AB[0]/300) * math.pi) / 2), 100 * direction_y * math.sin((abs(vect_AB[1]/300) * math.pi) / 2))
 
         #print("Throw force :", v)
-        grenade = Grenade(actualWormPlayer.rect.centerx, actualWormPlayer.rect.centery, v, game)
+        grenade = Grenade(actualWormPlayer.rect.centerx-actualWormPlayer.rect.width/2, actualWormPlayer.rect.centery-actualWormPlayer.rect.width/2, v, game)
         shoot_grenade = False
 
-    #print(worm.vel_y)
     #print(clock.get_fps())
     pygame.display.update() # Update affichage
 

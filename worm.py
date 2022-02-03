@@ -2,8 +2,10 @@ import pygame
 from projectile import Grenade
 
 class Worm(pygame.sprite.Sprite):
-    def __init__(self, x, y, scale, speed):
+    def __init__(self, name, x, y, scale, speed, color):
         super().__init__() # init Sprite
+        self.name = name
+        self.PLAYER_COLOR = color
         self.health = 100
         self.max_health = 100
         self.attack = 10
@@ -19,6 +21,16 @@ class Worm(pygame.sprite.Sprite):
         self.jump = False
         self.in_air = True
         self.projectile = pygame.sprite.Group()
+
+    def showName(self, screen):
+        font = pygame.font.SysFont("consolas", 17)
+        img = font.render(str(self.name), True, self.PLAYER_COLOR)
+        screen.blit(img, (self.rect.centerx - (img.get_width() / 2), self.rect.top - 30))
+
+    def showHealthBar(self,screen):
+        font = pygame.font.SysFont("consolas", 17)
+        img = font.render(str(self.health), True, self.PLAYER_COLOR)
+        screen.blit(img, (self.rect.centerx - (img.get_width() / 2), self.rect.top - 10))
 
     def draw(self, screen):
         screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
@@ -45,7 +57,7 @@ class Worm(pygame.sprite.Sprite):
             self.jump = False
             self.in_air = True
 
-        self.velocity_y += GRAVITY
+        self.velocity_y += 0.05 #GRAVITY
 
         dy += self.velocity_y
 

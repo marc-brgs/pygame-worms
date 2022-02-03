@@ -30,39 +30,19 @@ class Grenade(pygame.sprite.Sprite):
         #print("Grenade rotation speed :", self.rotation_speed)
 
     def update(self):
+        # Equation de trajectoire sans frottements
         self.rect.x = self.vel_x * self.t + self.x_0
         self.rect.y = -0.5 * -self.GRAVITY * self.t**2 + self.vel_y * self.t + self.y_0
-
-        # Ancien code trajectoire
-        """
-        #self.vel_y += 0.05 #self.GRAVITY
-        dx = self.vel_x
-        dy = self.vel_y
-
-
-        # Touche le sol
-        if self.rect.bottom + dy > 600:
-            dy = 600 - self.rect.bottom
-            self.vel_x = self.vel_x * 3/4
-            self.vel_y = -self.vel_y * (1/2)
-            if self.rotation_speed > 0:
-                self.rotation_speed -= .5
-
-        self.rect.x = dx
-        self.rect.y += dy
-        """
 
         # Rebonds
         if self.rect.bottom > 600:
             self.t = 0
             self.x_0 = self.rect.x
             self.y_0 = self.rect.y
-            self.vel_x = self.vel_x * (1 / 2)
+            self.vel_x = self.vel_x * (3 / 4)
             self.vel_y = self.vel_y * (3 / 4)
             if self.rotation_speed > 0:
                 self.rotation_speed -= .5
-
-
 
         self.image = pygame.transform.rotate(self.img, self.rotation)
         self.rotation += self.rotation_speed
@@ -124,7 +104,7 @@ class Explosion(pygame.sprite.Sprite):
         l_courbe_ecart = 4
 
         gauss = 1/(h_courbe_ecart*math.sqrt(2*math.pi)) * math.exp(-((d-esperance)**2)/(2*l_courbe_ecart)**2) *10
-        #print(gauss)
-        print(round(gauss))
+
+        #print(round(gauss))
 
         worm.health -= round(gauss)
