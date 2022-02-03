@@ -1,3 +1,5 @@
+import math
+
 import pygame
 from random import randrange
 
@@ -49,6 +51,17 @@ class Grenade(pygame.sprite.Sprite):
         self.rect.x = dx
         self.rect.y += dy
         """
+        """
+        # Touche le sol
+        if self.rect.y > 600:
+            self.x_0 = self.rect.x
+            self.y_0 = self.rect.y
+            self.vel_x = self.vel_x * 3 / 4
+            self.vel_y = -self.vel_y * 1 / 2
+            if self.rotation_speed > 0:
+                self.rotation_speed -= .5
+        """
+
 
         self.image = pygame.transform.rotate(self.img, self.rotation)
         self.rotation += self.rotation_speed
@@ -57,6 +70,8 @@ class Grenade(pygame.sprite.Sprite):
         if self.timer <= 0:
             self.kill()
             explosion = Explosion(self.rect.x, self.rect.y, 2, self.game)
+            explosion.degats(self.game.player1.worm1)
+            explosion.degats(self.game.player2.worm1)
 
         self.t += .05
 
@@ -91,3 +106,24 @@ class Explosion(pygame.sprite.Sprite):
                 self.kill()
             else:
                 self.image = self.images[self.img_index]
+
+    def degats(self, worm):
+        g_center = (self.rect.center[0], self.rect.center[1])
+        w_center = (worm.rect.centerx, worm.rect.centery)
+
+        #print(self.rect.center[0], self.rect.center[1])
+        #print(worm.rect.centerx, worm.rect.centery)
+
+        # calcul de distance en mètre dans le jeu : 10 pixel = 1 mètre
+        d = round(math.sqrt((g_center[0] - w_center[0])**2 + (g_center[1] - w_center[1])**2)) /10
+        #print(d)
+
+        esperance = 0
+        h_courbe_ecart = 0.1
+        l_courbe_ecart = 4
+
+        gauss = 1/(h_courbe_ecart*math.sqrt(2*math.pi)) * math.exp(-((d-esperance)**2)/(2*l_courbe_ecart)**2) *10
+        #print(gauss)
+        print(round(gauss))
+
+        worm.health -= round(gauss)

@@ -90,7 +90,7 @@ while running:
             signe_y = -1
         v = (factor * signe_x * math.sqrt(abs(vect_AB[0])), factor * signe_y * math.sqrt(abs(vect_AB[1])))
 
-        print("Throw force :", v)
+        #print("Throw force :", v)
         grenade = Grenade(actualWormPlayer.rect.centerx, actualWormPlayer.rect.centery, v, game)
         shoot_grenade = False
 
