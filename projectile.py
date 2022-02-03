@@ -51,16 +51,17 @@ class Grenade(pygame.sprite.Sprite):
         self.rect.x = dx
         self.rect.y += dy
         """
-        """
-        # Touche le sol
-        if self.rect.y > 600:
+
+        # Rebonds
+        if self.rect.bottom > 600:
+            self.t = 0
             self.x_0 = self.rect.x
             self.y_0 = self.rect.y
-            self.vel_x = self.vel_x * 3 / 4
-            self.vel_y = -self.vel_y * 1 / 2
+            self.vel_x = self.vel_x * (1 / 2)
+            self.vel_y = self.vel_y * (3 / 4)
             if self.rotation_speed > 0:
                 self.rotation_speed -= .5
-        """
+
 
 
         self.image = pygame.transform.rotate(self.img, self.rotation)
