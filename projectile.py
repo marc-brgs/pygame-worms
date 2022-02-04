@@ -40,7 +40,7 @@ class Grenade(pygame.sprite.Sprite):
             self.x_0 = self.rect.x
             self.y_0 = self.rect.y
             self.vel_x = self.vel_x * (3 / 4)
-            self.vel_y = self.vel_y * (3 / 4)
+            self.vel_y = -abs(self.vel_y) * (3 / 4)
             if self.rotation_speed > 0:
                 self.rotation_speed -= .5
 
@@ -63,7 +63,7 @@ class Explosion(pygame.sprite.Sprite):
     def __init__(self, x, y, scale, game):
         super().__init__()
         game.explosion_group.add(self)
-
+        game.end_turn = True
         self.images = []
         for i in range(1, 8):
             img = pygame.image.load(f"assets/explosion/exp{i}.png")

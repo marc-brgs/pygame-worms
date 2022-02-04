@@ -12,6 +12,8 @@ class Game:
         self.grenade_group = pygame.sprite.Group()
         self.box_group = pygame.sprite.Group()
         self.explosion_group = pygame.sprite.Group()
+        self.end_turn = False
+        self.turn = 0
 
     def aiming(self, screen, RED, worm):
         WHITE = (255, 255, 255)

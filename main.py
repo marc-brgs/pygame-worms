@@ -35,11 +35,11 @@ moving_left_1 = False
 moving_right_2 = False
 moving_left_2 = False
 shoot_grenade = False
+single_shoot = False
 
 # Script action
 running = True
 actualWormPlayer = tab_worms[0]
-turn = 0
 endgame = False
 
 while running:
@@ -62,14 +62,16 @@ while running:
     box_group.draw(screen)
 
     # Aide visée
-    if(actualWormPlayer == tab_worms[0]):
+    if(actualWormPlayer == tab_worms[0] and not single_shoot):
         game.aiming(screen, RED, tab_worms[0])
-    elif(actualWormPlayer == tab_worms[1]):
+    elif(actualWormPlayer == tab_worms[1] and not single_shoot):
         game.aiming(screen, RED, tab_worms[1])
 
-    if shoot_grenade:
+    if shoot_grenade and not single_shoot:
+        single_shoot = True
+        game.end_turn = False
         A = (actualWormPlayer.rect.centerx, actualWormPlayer.rect.centery)
-        B = (pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1] -30)
+        B = (pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1] - 30)
         #C = (pygame.mouse.get_pos()[0], actualWormPlayer.rect.centery)
 
         vect_AB = (B[0] - A[0], B[1] - A[1])
@@ -103,12 +105,16 @@ while running:
         #print("Throw force :", v)
         grenade = Grenade(actualWormPlayer.rect.centerx-actualWormPlayer.rect.width/2, actualWormPlayer.rect.centery-actualWormPlayer.rect.width/2, v, game)
         shoot_grenade = False
-        turn += 1
-        actualWormPlayer = tab_worms[turn % 2]
+
+    if game.end_turn:
+        game.turn += 1
+        actualWormPlayer = tab_worms[game.turn % 2]
         moving_right_1 = False
         moving_left_1 = False
         moving_right_2 = False
         moving_left_2 = False
+        game.end_turn = False
+        single_shoot = False
 
 
     font = pygame.font.SysFont("consolas", 25)
@@ -148,12 +154,12 @@ while running:
 
             # Input claviers
             elif event.type == pygame.KEYDOWN:
-                if turn%2 == 0:
+                if game.turn%2 == 0:
                     if event.key == pygame.K_RIGHT and actualWormPlayer.rect.x + actualWormPlayer.rect.width < SCREEN_WIDTH:
                         moving_right_1 = True
                     if event.key == pygame.K_LEFT and actualWormPlayer.rect.x > 0:
                         moving_left_1 = True
-                if turn%2 == 1:
+                if game.turn%2 == 1:
                     if event.key == pygame.K_RIGHT and actualWormPlayer.rect.x + actualWormPlayer.rect.width < SCREEN_WIDTH:
                         moving_right_2 = True
                     if event.key == pygame.K_LEFT and actualWormPlayer.rect.x > 0:
@@ -161,12 +167,12 @@ while running:
                 if event.key == pygame.K_UP and not actualWormPlayer.in_air:
                     actualWormPlayer.jump = True
             elif event.type == pygame.KEYUP:
-                if turn%2 == 0:
+                if game.turn%2 == 0:
                     if event.key == pygame.K_RIGHT:
                         moving_right_1 = False
                     if event.key == pygame.K_LEFT:
                         moving_left_1 = False
-                elif turn%2 == 1:
+                elif game.turn%2 == 1:
                     if event.key == pygame.K_RIGHT:
                         moving_right_2 = False
                     if event.key == pygame.K_LEFT:
