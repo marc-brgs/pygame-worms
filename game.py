@@ -10,8 +10,8 @@ class Game:
         self.player1 = Player(500, 350, (255, 0, 0))
         self.player2 = Player(780, 350, (0, 0, 255))
         self.grenade_group = pygame.sprite.Group()
+        self.box_group = pygame.sprite.Group()
         self.explosion_group = pygame.sprite.Group()
-        self.box = Box(1050, 580)
 
     def aiming(self, screen, RED, worm):
         WHITE = (255, 255, 255)

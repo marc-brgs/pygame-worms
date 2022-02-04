@@ -25,7 +25,9 @@ GRAVITY = game.GRAVITY
 tab_worms = [game.player1.worm1, game.player2.worm1]
 grenade_group = game.grenade_group
 explosion_group = game.explosion_group
-box = game.box
+box_group = game.box_group
+
+box = Box(1050, 580, game)
 
 # Actions
 moving_right_1 = False
@@ -56,8 +58,8 @@ while running:
     grenade_group.draw(screen)
     explosion_group.update()
     explosion_group.draw(screen)
-    box.draw(screen)
-    box.update()
+    box_group.update()
+    box_group.draw(screen)
 
     # Aide visée
     if(actualWormPlayer == tab_worms[0]):
@@ -108,9 +110,6 @@ while running:
         moving_right_2 = False
         moving_left_2 = False
 
-    if box.health <= 0:
-        game.box.kill()
-        #box.explosion(game)
 
     font = pygame.font.SysFont("consolas", 25)
 

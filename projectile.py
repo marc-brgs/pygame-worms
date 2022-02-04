@@ -53,7 +53,8 @@ class Grenade(pygame.sprite.Sprite):
             explosion = Explosion(self.rect.x, self.rect.y, 2, self.game)
             explosion.degats(self.game.player1.worm1, 0.1, 4)
             explosion.degats(self.game.player2.worm1, 0.1, 4)
-            explosion.degats(self.game.box, 0.1, 4)
+            for e in self.game.box_group:
+                explosion.degats(e, 0.1, 4)
 
 
         self.t += .05
