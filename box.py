@@ -1,7 +1,6 @@
 import pygame
 import math
 
-import game
 from projectile import Explosion
 
 class Box(pygame.sprite.Sprite):

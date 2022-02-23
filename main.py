@@ -5,16 +5,17 @@ import pygame
 from game import Game
 from projectile import Grenade
 from box import Box
+import constant_dispenser
 
 pygame.init()
-SCREEN_WIDTH = 1280 # (1280x720)
+SCREEN_WIDTH = constant_dispenser.SCREEN_WIDTH # (1280x720)
 SCREEN_HEIGHT = SCREEN_WIDTH*(9/16) # ratio 16/9
 
 pygame.display.set_caption("Worms")
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 clock = pygame.time.Clock()
-FPS = 144
+FPS = constant_dispenser.FPS
 
 background = pygame.image.load("assets/background.jpg")
 RED = (255, 0, 0)
@@ -26,6 +27,7 @@ tab_worms = [game.player1.worm1, game.player2.worm1]
 grenade_group = game.grenade_group
 explosion_group = game.explosion_group
 box_group = game.box_group
+worm_group = game.worm_group
 
 box = Box(1050, 580, game)
 
@@ -48,10 +50,10 @@ while running:
     # Affichage background
     screen.blit(background, (0,0))
 
-    # Affichage sol et worm
+    # Affichage sol et worms
     pygame.draw.line(screen, RED, (0, 593), (SCREEN_WIDTH, 593))
-    game.player1.showWorm(screen, moving_left_1, moving_right_1, GRAVITY)
-    game.player2.showWorm(screen, moving_left_2, moving_right_2, GRAVITY)
+    game.player1.showWorm(screen, moving_left_1, moving_right_1)
+    game.player2.showWorm(screen, moving_left_2, moving_right_2)
 
     # Affichage autres entités
     grenade_group.update()
@@ -63,9 +65,11 @@ while running:
 
     # Aide visée
     if(actualWormPlayer == tab_worms[0] and not single_shoot):
-        game.aiming(screen, RED, tab_worms[0])
+        game.aiming(screen, tab_worms[0])
+        game.player1.worm1.lookCursor()
     elif(actualWormPlayer == tab_worms[1] and not single_shoot):
-        game.aiming(screen, RED, tab_worms[1])
+        game.aiming(screen, tab_worms[1])
+        game.player2.worm1.lookCursor()
 
     if shoot_grenade and not single_shoot:
         single_shoot = True
@@ -88,7 +92,7 @@ while running:
         #alpha = math.acos(prod_scalaire/(norme_AB*norme_AC))
         '''
 
-        factor = 5
+        factor = 100
         direction_x = 1
         direction_y = 1
         if vect_AB[0] < 0:
@@ -100,7 +104,7 @@ while running:
             vect_AB = (direction_x * 300, vect_AB[1])
         if abs(vect_AB[1]/300) > 1:
             vect_AB = (vect_AB[0], direction_y * 300)
-        v = (100 * direction_x * math.sin((abs(vect_AB[0]/300) * math.pi) / 2), 100 * direction_y * math.sin((abs(vect_AB[1]/300) * math.pi) / 2))
+        v = (factor * direction_x * math.sin((abs(vect_AB[0]/300) * math.pi) / 2), 100 * direction_y * math.sin((abs(vect_AB[1]/300) * math.pi) / 2))
 
         #print("Throw force :", v)
         grenade = Grenade(actualWormPlayer.rect.centerx-actualWormPlayer.rect.width/2, actualWormPlayer.rect.centery-actualWormPlayer.rect.width/2, v, game)
@@ -119,18 +123,15 @@ while running:
 
     font = pygame.font.SysFont("consolas", 25)
 
-    if(tab_worms[0].health <= 0 and tab_worms[1].health <= 0):
-        end_message = font.render("égalité !", True, (255, 80, 255))
-        screen.blit(end_message, (SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
-        endgame = True
+    if (tab_worms[0].health <= 0 or tab_worms[1].health <= 0):
+        if(tab_worms[0].health <= 0 and tab_worms[1].health <= 0):
+            end_message = font.render("égalité !", True, (255, 80, 255))
+        elif(tab_worms[0].health <= 0):
+            end_message = font.render(str(tab_worms[1].name) + " a gagné !", True, tab_worms[1].PLAYER_COLOR)
+        elif (tab_worms[1].health <= 0):
+            end_message = font.render(str(tab_worms[0].name) + " a gagné !", True, tab_worms[0].PLAYER_COLOR)
 
-    elif(tab_worms[0].health <= 0):
-        end_message = font.render(str(tab_worms[1].name) + " a gagné !", True, tab_worms[1].PLAYER_COLOR)
-        screen.blit(end_message, (SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
-        endgame = True
-    elif (tab_worms[1].health <= 0):
-        end_message = font.render(str(tab_worms[0].name) + " a gagné !", True, tab_worms[0].PLAYER_COLOR)
-        screen.blit(end_message, (SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
+        screen.blit(end_message, ((SCREEN_WIDTH-end_message.get_width())/2, (SCREEN_HEIGHT-end_message.get_height())/2))
         endgame = True
 
     #print(clock.get_fps())
