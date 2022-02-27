@@ -23,5 +23,5 @@ class Box(pygame.sprite.Sprite):
 
     def explosion(self):
         explosion = Explosion(self.rect.x, self.rect.y, 2, self.game)
-        explosion.degats(self.game.player1.worm1, 0.075, 6)
-        explosion.degats(self.game.player2.worm1, 0.075, 6)
+        explosion.degats(self.game.player1.worm1, 0.075, 6, self.game)
+        explosion.degats(self.game.player2.worm1, 0.075, 6, self.game)

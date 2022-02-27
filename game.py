@@ -1,17 +1,18 @@
 import pygame
 import math
 from player import Player
+from environment import Evironment
 
 class Game:
     def __init__(self):
         self.GRAVITY = 9.81
-        #self.environment = Evironment("assets/background.png", "assets/ground.png")
+        self.environment = Evironment("assets/ground.png", "assets/background.png")
         self.grenade_group = pygame.sprite.Group()
         self.box_group = pygame.sprite.Group()
         self.explosion_group = pygame.sprite.Group()
         self.worm_group = pygame.sprite.Group()
-        self.player1 = Player(self, 500, 350, (255, 0, 0))
-        self.player2 = Player(self, 780, 350, (0, 0, 255))
+        self.player1 = Player(self, 500, 330, (255, 0, 0))
+        self.player2 = Player(self, 780, 330, (0, 0, 255))
         self.end_turn = False
         self.turn = 0
 

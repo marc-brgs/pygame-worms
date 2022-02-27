@@ -4,8 +4,6 @@ import constant_dispenser
 from game import Game
 from projectile import Grenade
 from box import Box
-from environment import Evironment
-
 
 pygame.init()
 SCREEN_WIDTH = constant_dispenser.SCREEN_WIDTH # (1280x720)
@@ -16,13 +14,9 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 clock = pygame.time.Clock()
 FPS = constant_dispenser.FPS
-
-
-#ground = pygame.image.load("assets/ground.png")
 RED = (255, 0, 0)
 
 # Init
-environment = Evironment("assets/ground.png", "assets/background.png")
 game = Game()
 GRAVITY = game.GRAVITY
 tab_worms = [game.player1.worm1, game.player2.worm1]
@@ -31,9 +25,10 @@ explosion_group = game.explosion_group
 box_group = game.box_group
 worm_group = game.worm_group
 
-box = Box(100, 420, game)
+box = Box(900, 580, game)
 
-background = pygame.image.load("assets/background_show.jpg")
+groundForMask = pygame.image.load("assets/ground-actual.png")
+groundMask = pygame.mask.from_surface(groundForMask)
 
 # Actions
 moving_right_1 = False
@@ -52,11 +47,11 @@ while running:
     dt = clock.tick(FPS)
 
     # Affichage background
-    screen.blit(background, (0,0))
-    #screen.blit(ground, (0,100))
+    screen.blit(game.environment.pygameBackground, (0,0))
+    #screen.blit(groundForMask, (0,0))
 
     # Affichage sol et worms
-    pygame.draw.line(screen, RED, (0, 593), (SCREEN_WIDTH, 593))
+    # pygame.draw.line(screen, RED, (0, 593), (SCREEN_WIDTH, 593))
     game.player1.showWorm(screen, moving_left_1, moving_right_1)
     game.player2.showWorm(screen, moving_left_2, moving_right_2)
 
@@ -67,6 +62,11 @@ while running:
     explosion_group.draw(screen)
     box_group.update()
     box_group.draw(screen)
+
+    # détecion de collision avec le sol
+
+    if game.player1.worm1.wormCollisionWithGround(groundMask) != None:
+        print("collide")
 
     # Aide visée
     if(actualWormPlayer == tab_worms[0] and not single_shoot):
@@ -81,21 +81,8 @@ while running:
         game.end_turn = False
         A = (actualWormPlayer.rect.centerx, actualWormPlayer.rect.centery)
         B = (pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1] - 30)
-        #C = (pygame.mouse.get_pos()[0], actualWormPlayer.rect.centery)
 
         vect_AB = (B[0] - A[0], B[1] - A[1])
-
-        '''
-        #vect_AC = (C[0] - A[0], C[1] - A[1])
-        #vect_CB = (B[0] - C[0], B[1] - C[1])
-
-        #norme_AB = math.sqrt(vect_AB[0]**2 + vect_AB[1]**2)
-        #norme_AC = math.sqrt(vect_AC[0]**2 + vect_AC[1]**2)
-
-        #prod_scalaire = vect_AB[0]*vect_AC[0] + vect_AB[1]*vect_AC[1]
-
-        #alpha = math.acos(prod_scalaire/(norme_AB*norme_AC))
-        '''
 
         factor = 100
         direction_x = 1
@@ -124,7 +111,6 @@ while running:
         moving_left_2 = False
         game.end_turn = False
         single_shoot = False
-
 
     font = pygame.font.SysFont("consolas", 25)
 

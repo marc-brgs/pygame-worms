@@ -35,10 +35,11 @@ class Explosion(pygame.sprite.Sprite):
             else:
                 self.image = self.images[self.img_index]
 
-    def degats(self, element, h_courbe_ecart, l_courbe_ecart):
+    def degats(self, element, h_courbe_ecart, l_courbe_ecart, game):
         g_center = (self.rect.center[0], self.rect.center[1])
         w_center = (element.rect.centerx, element.rect.centery)
 
+        game.environment.destruction(g_center, 100)
         #print(self.rect.center[0], self.rect.center[1])
         #print(worm.rect.centerx, worm.rect.centery)
 
