@@ -1,11 +1,11 @@
 import math
-from turtledemo import clock
-
 import pygame
+import constant_dispenser
 from game import Game
 from projectile import Grenade
 from box import Box
-import constant_dispenser
+from environment import Evironment
+
 
 pygame.init()
 SCREEN_WIDTH = constant_dispenser.SCREEN_WIDTH # (1280x720)
@@ -17,10 +17,12 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 FPS = constant_dispenser.FPS
 
-background = pygame.image.load("assets/background.jpg")
+
+#ground = pygame.image.load("assets/ground.png")
 RED = (255, 0, 0)
 
 # Init
+environment = Evironment("assets/ground.png", "assets/background.png")
 game = Game()
 GRAVITY = game.GRAVITY
 tab_worms = [game.player1.worm1, game.player2.worm1]
@@ -29,7 +31,9 @@ explosion_group = game.explosion_group
 box_group = game.box_group
 worm_group = game.worm_group
 
-box = Box(1050, 580, game)
+box = Box(100, 420, game)
+
+background = pygame.image.load("assets/background_show.jpg")
 
 # Actions
 moving_right_1 = False
@@ -49,6 +53,7 @@ while running:
 
     # Affichage background
     screen.blit(background, (0,0))
+    #screen.blit(ground, (0,100))
 
     # Affichage sol et worms
     pygame.draw.line(screen, RED, (0, 593), (SCREEN_WIDTH, 593))

@@ -1,5 +1,4 @@
 import pygame
-from projectile import Grenade
 import constant_dispenser
 
 class Worm(pygame.sprite.Sprite):
