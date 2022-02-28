@@ -1,12 +1,12 @@
 import pygame
 import math
 from player import Player
-from environment import Evironment
+from environment import Environment
 
 class Game:
     def __init__(self):
         self.GRAVITY = 9.81
-        self.environment = Evironment("assets/ground.png", "assets/background.png")
+        self.environment = Environment("assets/ground.png", "assets/background.png")
         self.grenade_group = pygame.sprite.Group()
         self.box_group = pygame.sprite.Group()
         self.explosion_group = pygame.sprite.Group()

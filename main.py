@@ -27,9 +27,6 @@ worm_group = game.worm_group
 
 box = Box(900, 580, game)
 
-groundForMask = pygame.image.load("assets/ground-actual.png")
-groundMask = pygame.mask.from_surface(groundForMask)
-
 # Actions
 moving_right_1 = False
 moving_left_1 = False
@@ -64,9 +61,7 @@ while running:
     box_group.draw(screen)
 
     # détecion de collision avec le sol
-
-    if game.player1.worm1.wormCollisionWithGround(groundMask) != None:
-        print("collide")
+    # game.environment.collision(game.player1)
 
     # Aide visée
     if(actualWormPlayer == tab_worms[0] and not single_shoot):

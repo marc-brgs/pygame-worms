@@ -68,10 +68,10 @@ class Grenade(pygame.sprite.Sprite):
         if self.timer <= 0:
             self.kill()
             explosion = Explosion(self.rect.x, self.rect.y, 2, self.game)
-            explosion.degats(self.game.player1.worm1, 0.1, 4, self.game)
-            explosion.degats(self.game.player2.worm1, 0.1, 4, self.game)
+            explosion.degats(self.game.player1.worm1, 0.1, 4, self.game, 100)
+            explosion.degats(self.game.player2.worm1, 0.1, 4, self.game, 100)
             for e in self.game.box_group:
-                explosion.degats(e, 0.1, 4, self.game)
+                explosion.degats(e, 0.1, 4, self.game, 100)
 
         self.t += .05
 

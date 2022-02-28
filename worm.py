@@ -1,8 +1,8 @@
 import pygame
 import constant_dispenser
 
-#groundForMask = pygame.image.load("assets/ground-actual.png")
-#groundMask = pygame.mask.from_surface(groundForMask)
+groundForMask = pygame.image.load("assets/ground-actual.png")
+groundMask = pygame.mask.from_surface(groundForMask, 1)
 
 class Worm(pygame.sprite.Sprite):
     def __init__(self, game, name, x, y, scale, speed, color):
@@ -68,6 +68,15 @@ class Worm(pygame.sprite.Sprite):
 
         self.dy += self.vel_y
 
+
+        #isCollision = self.wormCollisionWithGround(groundMask)
+        #if isCollision != None:
+            #self.dx = 0
+            #self.rect.bottom = isCollision[0]
+            #self.dy = 0
+            #self.in_air = False
+
+        # Collision avec le sol
         if self.rect.bottom + self.dy > 600:
             self.dy = 600 - self.rect.bottom
             self.in_air = False
@@ -100,8 +109,7 @@ class Worm(pygame.sprite.Sprite):
                 self.in_air = False
 
     def wormCollisionWithGround(self, mask, x=0, y=0):
-        worm_mask = pygame.mask.from_surface(self.img)
-        offset = (int(x - self.rect.x), int(y - self.rect.y))
+        worm_mask = pygame.mask.from_surface(self.img, 1)
+        offset = (int(self.rect.x - x), int(self.rect.y - y))
         collision = mask.overlap(worm_mask, offset)
-        #print(collision)
         return collision

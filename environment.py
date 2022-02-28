@@ -1,7 +1,7 @@
 import pygame
 from PIL import Image, ImageDraw
 
-class Evironment():
+class Environment():
     def __init__(self, groundPath, backgroundPath):
         self.ground = Image.open(groundPath).convert("RGBA")
         self.background = Image.open(backgroundPath).convert("RGBA")
@@ -26,9 +26,3 @@ class Evironment():
         self.updateBackgroundFusion(self.background, self.actualGround)
         self.saveBackground()
         self.pygameBackground = pygame.image.load("assets/background_show.jpg")
-
-    #def collision(self, player):
-        #coords = self.actualGround.getpixel((player.worm1.rect.x,player.worm1.rect.y))
-        #print(coords)
-        #if(player.worm1.rect.y + 30 >= coords[1] and coords == (0, 0, 0, 0)):
-            #player.worm1.rect.y = coords[1]
